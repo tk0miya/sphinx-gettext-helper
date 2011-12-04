@@ -53,11 +53,15 @@ def parse_option():
         msg = "language and locale_dirs was not defined: %s" % options.config
         raise RuntimeError(msg)
 
-    options.locale_dir = os.path.join(config['locale_dirs'][0],
-                                      options.language, 'LC_MESSAGES')
-
     if options.language is None:
         options.language = config['language']
+
+    if options.language is None:
+        msg = "No languages are selected"
+        raise RuntimeError(msg)
+
+    options.locale_dir = os.path.join(config['locale_dirs'][0],
+                                      options.language, 'LC_MESSAGES')
 
     return options, args
 
