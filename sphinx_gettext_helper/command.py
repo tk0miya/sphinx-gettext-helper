@@ -36,8 +36,8 @@ def parse_option():
         p.print_help()
         sys.exit(0)
 
-    if not options.build and not options.update and not options.statistics:
-        msg = "Specify --build or --update or --statistics option"
+    if not options.build and not options.update:
+        msg = "Specify --build or --update option"
         raise RuntimeError(msg)
 
     if not options.potdir:
@@ -62,6 +62,10 @@ def parse_option():
 
     options.locale_dir = os.path.join(config['locale_dirs'][0],
                                       options.language, 'LC_MESSAGES')
+
+    if options.language == 'C':
+        # do nothing for locale=C
+        sys.exit(0)
 
     return options, args
 
@@ -101,18 +105,11 @@ def do_build(options):
         if re.search('\.po$', file):
             mofile = file[:-2] + "mo"
 
-            cmd = "msgfmt %s -o %s" % (file, mofile)
-            os.system(cmd)
+            if options.statistics:
+                cmd = "msgfmt --statistics %s -o %s" % (file, mofile)
+            else:
+                cmd = "msgfmt %s -o %s" % (file, mofile)
 
-
-def show_statistics(options):
-    for file in os.listdir(options.locale_dir):
-        file = os.path.join(options.locale_dir, file)
-
-        if re.search('\.po$', file):
-            sys.stdout.write("%s: " % os.path.basename(file))
-            sys.stdout.flush()
-            cmd = "msgfmt --statistics %s" % file
             os.system(cmd)
 
 
@@ -131,6 +128,3 @@ def main():
 
     if options.build:
         do_build(options)
-
-    if options.statistics:
-        show_statistics(options)
