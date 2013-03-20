@@ -71,14 +71,15 @@ def parse_option():
 
 
 def read_config(path):
+    namespace = {}
     olddir = os.getcwd()
     try:
         os.chdir(os.path.dirname(path) or ".")
-        execfile(path)
+        execfile(path, namespace)
     finally:
         os.chdir(olddir)
 
-    return locals()
+    return namespace
 
 
 def do_update(options):
