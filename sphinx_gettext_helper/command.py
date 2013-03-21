@@ -90,9 +90,9 @@ def do_update(options):
             pofile = os.path.join(options.locale_dir, basename)
 
             if os.path.isfile(pofile):
-                cmd = "msgmerge -U %s %s" % (pofile, file)
+                cmd = "msgmerge -q -U %s %s" % (pofile, file)
             else:
-                cmd = "msginit --locale=%s --input=%s --output=%s" % \
+                cmd = "msginit --no-translator --locale=%s --input=%s --output=%s" % \
                       (options.language, file, pofile)
 
             os.system(cmd)
