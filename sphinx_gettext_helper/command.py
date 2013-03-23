@@ -71,23 +71,30 @@ def parse_option():
 
 
 def read_config(path):
+    namespace = {}
     olddir = os.getcwd()
     try:
         os.chdir(os.path.dirname(path) or ".")
-        execfile(path)
+        execfile(path, namespace)
     finally:
         os.chdir(olddir)
 
-    return locals()
+    return namespace
 
 
 def do_update(options):
-    for file in os.listdir(options.potdir):
-        file = os.path.join(options.potdir, file)
+    for dirpath, dirnames, filenames in os.walk(options.potdir):
+        for filename in filenames:
+            file = os.path.join(dirpath, filename)
+            base, ext = os.path.splitext(file)
+            if ext != ".pot":
+                continue
+            basename = os.path.relpath(base, options.potdir)
+            pofile = os.path.join(options.locale_dir, basename+".po")
 
-        if re.search('\.pot$', file):
-            basename = os.path.basename(file)[:-1]
-            pofile = os.path.join(options.locale_dir, basename)
+            outdir = os.path.dirname(pofile)
+            if not os.path.exists(outdir):
+                os.makedirs(outdir)
 
             if os.path.isfile(pofile):
                 cmd = "msgmerge -q -U %s %s" % (pofile, file)
@@ -99,11 +106,14 @@ def do_update(options):
 
 
 def do_build(options):
-    for file in os.listdir(options.locale_dir):
-        file = os.path.join(options.locale_dir, file)
+    for dirpath, dirnames, filenames in os.walk(options.locale_dir):
+        for filename in filenames:
+            file = os.path.join(dirpath, filename)
+            base, ext = os.path.splitext(file)
+            if ext != ".po":
+                continue
 
-        if re.search('\.po$', file):
-            mofile = file[:-2] + "mo"
+            mofile = base + ".mo"
 
             if options.statistics:
                 cmd = "msgfmt --statistics %s -o %s" % (file, mofile)
