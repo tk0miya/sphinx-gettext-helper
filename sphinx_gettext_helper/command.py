@@ -49,7 +49,7 @@ def parse_option():
         raise RuntimeError(msg)
 
     config = read_config(options.config)
-    if not config.has_key('language') or not config.has_key('locale_dirs'):
+    if 'language' not in config or 'locale_dirs' not in config:
         msg = "language and locale_dirs was not defined: %s" % options.config
         raise RuntimeError(msg)
 
@@ -90,7 +90,7 @@ def do_update(options):
             if ext != ".pot":
                 continue
             basename = os.path.relpath(base, options.potdir)
-            pofile = os.path.join(options.locale_dir, basename+".po")
+            pofile = os.path.join(options.locale_dir, basename + ".po")
 
             outdir = os.path.dirname(pofile)
             if not os.path.exists(outdir):
