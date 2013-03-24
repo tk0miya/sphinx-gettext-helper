@@ -49,9 +49,15 @@ def parse_option():
         raise RuntimeError(msg)
 
     config = read_config(options.config)
-    if 'language' not in config or 'locale_dirs' not in config:
-        msg = "language and locale_dirs was not defined: %s" % options.config
+    if not config.has_key('locale_dirs'):
+        msg = "locale_dirs was not defined: %s" % options.config
         raise RuntimeError(msg)
+
+    if options.language is None:
+        if not config.has_key('language'):
+            msg = "language was not defined: %s" % options.config
+            raise RuntimeError(msg)
+        options.language = config['language']
 
     if options.language is None:
         options.language = config['language']
