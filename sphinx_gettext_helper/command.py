@@ -60,9 +60,6 @@ def parse_option():
         options.language = config['language']
 
     if options.language is None:
-        options.language = config['language']
-
-    if options.language is None:
         msg = "No languages are selected"
         raise RuntimeError(msg)
 
