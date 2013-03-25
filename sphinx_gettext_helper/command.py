@@ -49,12 +49,12 @@ def parse_option():
         raise RuntimeError(msg)
 
     config = read_config(options.config)
-    if not config.has_key('locale_dirs'):
+    if 'locale_dirs' not in config:
         msg = "locale_dirs was not defined: %s" % options.config
         raise RuntimeError(msg)
 
     if options.language is None:
-        if not config.has_key('language'):
+        if 'language' not in config:
             msg = "language was not defined: %s" % options.config
             raise RuntimeError(msg)
         options.language = config['language']
@@ -105,8 +105,9 @@ def do_update(options):
             if os.path.isfile(pofile):
                 cmd = "msgmerge -q -U %s %s" % (pofile, file)
             else:
-                cmd = "msginit --no-translator --locale=%s --input=%s --output=%s" % \
-                      (options.language, file, pofile)
+                cmd = ("msginit --no-translator --locale=%s " +
+                       "--input=%s --output=%s" %
+                       (options.language, file, pofile))
 
             os.system(cmd)
 
