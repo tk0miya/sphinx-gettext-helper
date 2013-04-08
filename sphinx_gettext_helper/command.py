@@ -102,9 +102,8 @@ def do_update(options):
             if os.path.isfile(pofile):
                 cmd = "msgmerge -q -U %s %s" % (pofile, file)
             else:
-                cmd = ("msginit --no-translator --locale=%s " +
-                       "--input=%s --output=%s" %
-                       (options.language, file, pofile))
+                cmd = ("msginit --no-translator --locale=%s " % (options.language) +
+                       "--input=%s --output=%s" % (file, pofile))
 
             os.system(cmd)
 
