@@ -21,7 +21,7 @@ requires = ['Sphinx>=1.1.0']
 
 setup(
     name='sphinx-gettext-helper',
-    version='0.2.1',
+    version='0.2.2',
     url='http://bitbucket.org/tk0miya/sphinx-gettext-helper',
     download_url='http://pypi.python.org/pypi/sphinx-gettext-helper',
     license='BSD',
