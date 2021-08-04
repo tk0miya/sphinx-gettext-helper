@@ -78,7 +78,7 @@ def read_config(path):
     olddir = os.getcwd()
     try:
         os.chdir(os.path.dirname(path) or ".")
-        execfile(path, namespace)
+        exec(open(path).read(), namespace)
     finally:
         os.chdir(olddir)
 
@@ -129,7 +129,7 @@ def do_build(options):
 def main():
     try:
         options, args = parse_option()
-    except RuntimeError, e:
+    except RuntimeError as e:
         sys.stderr.write("ERROR: %s\n" % e)
         return
 
